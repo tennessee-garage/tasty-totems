@@ -1,0 +1,8 @@
+# ignore my trash directory
+trash
+
+# No mac directories
+.DS_Store
+
+# Don't include this licensed material
+art/stock animation/
