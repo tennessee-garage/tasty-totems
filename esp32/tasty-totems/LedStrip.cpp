@@ -1,1 +1,0 @@
-lib/LedStrip/LedStrip.cpp
