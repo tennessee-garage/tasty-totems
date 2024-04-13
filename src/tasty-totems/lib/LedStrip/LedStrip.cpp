@@ -4,7 +4,7 @@
 
 #include "LedStrip.h"
 
-LedStrip::LedStrip(int16_t strip_pin, int num_pixels) {
+LedStrip::LedStrip(uint8_t strip_pin, int num_pixels) {
     _strip_pin = strip_pin;
     _num_pixels = num_pixels;
 

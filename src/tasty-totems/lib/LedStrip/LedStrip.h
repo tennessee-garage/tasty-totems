@@ -15,7 +15,7 @@
 
 class LedStrip {
 public:
-    LedStrip(int16_t strip_pin, int num_pixels);
+    LedStrip(uint8_t strip_pin, int num_pixels);
     void setup();
     void update();
 
@@ -39,7 +39,7 @@ private:
     void _handle_end_strobe();
     void _update_number_of_frames();
 
-    int16_t _strip_pin;
+    uint8_t _strip_pin;
     int _num_pixels;
 
     Adafruit_NeoPixel *_pixels;

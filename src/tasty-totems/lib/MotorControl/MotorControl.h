@@ -4,21 +4,13 @@
 #ifndef MotorControl_h
 #define MotorControl_h
 
-#include "Arduino.h"
-
-// Constants specific to the motor and gearbox used
-#define DEFAULT_GEARING 100
-#define DEFAULT_ENCODER_MULT 14
+#include <Arduino.h>
+#include "EncoderMonitor.h"
 
 // Settings to manage PWM on the motor
 #define DEFAULT_PWM_FREQ 80000
 #define DEFAULT_PWM_CHANNEL 0
 #define DEFAULT_PWM_RESOLUTION 13
-
-// Conversion factors
-#define MICROS_IN_SECOND 1000000
-#define SECONDS_IN_MINUTE 60
-#define MICROS_IN_MINUTE (MICROS_IN_SECOND * SECONDS_IN_MINUTE)
 
 // PID constants
 #define PROPORTIONAL_K 0.5
@@ -30,7 +22,7 @@
 
 class MotorControl {
 public:
-    MotorControl(int motor_pin, unsigned long *encoder_delta);
+    MotorControl(uint8_t motor_pin_1, uint8_t motor_pin_2, EncoderMonitor *encoder);
     void setup();
 
     void start_motor(int target_rpm, float duty_cycle);
@@ -59,16 +51,13 @@ private:
     void _update_current_rpm();
     void _add_to_pwm_duty_cycle(long duty_cycle_delta);
 
-    int _motor_pin;
+    int _motor_pin_1;
+    int _motor_pin_2;
+    EncoderMonitor *_encoder;
 
-    int _gearing;
-    int _encoder_mult;
-    unsigned long _timing_constant;
-    unsigned long *_encoder_delta;
-
-    int _pwm_freq;
-    int _pwm_channel;
-    int _pwm_resolution;
+    int _pwm_freq = DEFAULT_PWM_FREQ;
+    int _pwm_channel = DEFAULT_PWM_CHANNEL;
+    int _pwm_resolution = DEFAULT_PWM_RESOLUTION;
 
     // Duty cycle as an int between 0 and _pwm_resolution ** 2
     unsigned long _pwm_duty_cycle;
@@ -76,7 +65,6 @@ private:
     unsigned long _max_duty_cycle;
 
     int _target_rpm;
-    int _current_rpm;
 
     bool _is_motor_ready;
 
