@@ -50,6 +50,7 @@ private:
     int _pid_error();
     void _update_current_rpm();
     void _add_to_pwm_duty_cycle(long duty_cycle_delta);
+    void _configure_pwm();
 
     int _motor_pin_1;
     int _motor_pin_2;

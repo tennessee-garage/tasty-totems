@@ -26,8 +26,8 @@ void MotorControl::setup() {
     pinMode(_motor_pin_2, OUTPUT);
     digitalWrite(_motor_pin_2, 0);
 
-    // configure the PWM channel for our motor via the LEDC methods
-    ledcSetup(_pwm_channel, _pwm_freq, _pwm_resolution);
+    // Configure PWM parameters needed to control the motor via the ledc library
+    _configure_pwm();
 
     // attach the channel to the GPIO to be controlled
     ledcAttachPin(_motor_pin_1, _pwm_channel);
@@ -77,6 +77,11 @@ float MotorControl::error_percent() {
     return (float) error / (float) _target_rpm;
 }
 
+void MotorControl::_configure_pwm() {
+    // configure the PWM channel for our motor via the LEDC methods
+    ledcSetup(_pwm_channel, _pwm_freq, _pwm_resolution);
+}
+
 int MotorControl::_pid_error() {
     return _target_rpm - _encoder->get_current_rpm();
 }
@@ -104,6 +109,8 @@ void MotorControl::set_pwm_channel(int channel) {
 
 void MotorControl::set_pwm_freq(int freq) {
     _pwm_freq = freq;
+
+    _configure_pwm();
 }
 
 // Set the duty cycle as float between 0.0 and 1.0
