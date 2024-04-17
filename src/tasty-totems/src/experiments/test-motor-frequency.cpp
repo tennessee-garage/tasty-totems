@@ -1,5 +1,6 @@
 #include "tasty-totems.h"
 #include "EncoderMonitor.h"
+#include "PIDControl.h"
 #include "MotorControl.h"
 
 #define ANALOG_PIN 4 // 13
@@ -19,7 +20,12 @@
 
 #define STATUS_UPDATE_DELAY_MS 500
 
+// PID constants
+#define PROPORTIONAL_K 0.2
+#define DERIVATIVE_K (0.3/10000)
+
 EncoderMonitor *ENCODER;
+PIDControl *PID;
 MotorControl *MOTOR;
 float analog_value = 0.0;
 uint32_t new_pwm = DEFAULT_PWM_FREQ;
@@ -38,8 +44,12 @@ void setup() {
     ENCODER->begin();
     Serial.println("done");
 
+    Serial.print("Creating PID controller ...");
+    PID = new PIDControl(ENCODER);
+    PID->set_constants(PROPORTIONAL_K, 0, DERIVATIVE_K);
+
     Serial.print("Initializing motor ... ");
-    MOTOR = new MotorControl(MOTOR_PIN_1, MOTOR_PIN_2, ENCODER);
+    MOTOR = new MotorControl(MOTOR_PIN_1, MOTOR_PIN_2, PID);
     MOTOR->set_pwm_channel(PWM_CHANNEL);
     MOTOR->setup();
     Serial.println("done");
@@ -47,7 +57,7 @@ void setup() {
     Serial.print("Starting motor at ");
     Serial.print(DEFAULT_DUTY_CYCLE * 100);
     Serial.print("\% duty cycle ... ");
-    MOTOR->start_motor(TARGET_RPM, 0.50);//DEFAULT_DUTY_CYCLE);
+    MOTOR->start_motor(TARGET_RPM);
     Serial.println("done");
 }
 
@@ -100,22 +110,24 @@ void loop() {
         //MOTOR->set_pwm_duty_cycle((float)0.5);
 
         Serial.print(">pError:");
-        Serial.println(MOTOR->_pid_error() * PROPORTIONAL_K);
+        Serial.println(PID->get_proportial_response());
+ 
         Serial.print(">rpm:");
         Serial.println(ENCODER->get_current_rpm());
 
-        Serial.print(">dErrro:");
-        Serial.println(MOTOR->get_derivative_error() * DERIVATIVE_K);
+        Serial.print(">dError:");
+        Serial.println(PID->get_derivative_response());
+
         Serial.print(">pidResponse:");
-        Serial.println((MOTOR->_pid_error() * PROPORTIONAL_K) + (MOTOR->get_derivative_error() * DERIVATIVE_K));
+        Serial.println(PID->get_response());
 
         Serial.print(">iError:");
-        Serial.println(MOTOR->get_integral_error());
+        Serial.println(PID->get_integral_response());
         Serial.print(">dutyCyle:");
         Serial.println(MOTOR->get_pwm_duty_cycle());
 
         Serial.print(">errorPercent:");
-        Serial.println(100*MOTOR->error_percent());
+        Serial.println(100*PID->error_percent());
 
         //Serial.print(">pidError:");
         //Serial.println(MOTOR->_pid_error());

@@ -5,25 +5,18 @@
 #include "Arduino.h"
 #include "MotorControl.h"
 
-MotorControl::MotorControl(uint8_t motor_pin_1, uint8_t motor_pin_2, EncoderMonitor *encoder) {
+MotorControl::MotorControl(uint8_t motor_pin_1, uint8_t motor_pin_2, PIDControl *pid) {
     _motor_pin_1 = motor_pin_1;
     _motor_pin_2 = motor_pin_2;
-    _encoder = encoder;
+    _pid = pid;
 
     // Establish our max value
     _pwm_duty_cycle = 0;
     _max_duty_cycle = (2 << (_pwm_resolution-1)) - 1;
 
-    _target_rpm = 0;
-
     _is_motor_ready = false;
 
     _next_pid_check_micros = micros() + PID_DELTA_MICROS;
-    _last_pid_check_micros = micros();
-    _cummulative_error = 0.0;
-
-    _last_pid_error = 0;
-    _pid_error_delta = 0.0;
 }
 
 void MotorControl::setup() {
@@ -45,16 +38,21 @@ void MotorControl::_configure_pwm() {
     ledcSetup(_pwm_channel, _pwm_freq, _pwm_resolution);
 }
 
+// With the PID controller, the caller shouldn't have to specify a starting duty cycle.
+void MotorControl::start_motor(int target_rpm) {
+    start_motor(target_rpm, 0.5);
+}
+
 void MotorControl::start_motor(int target_rpm, float duty_cycle) {
     set_pwm_duty_cycle(duty_cycle);
-    _target_rpm = target_rpm;
+    _pid->set_target_rpm(target_rpm);
 
     update_motor_speed();
 }
 
 void MotorControl::stop_motor() {
     set_pwm_duty_cycle((unsigned long) 0);
-    _target_rpm = 0;
+    _pid->set_target_rpm(0);
 
     update_motor_speed();
 }
@@ -66,7 +64,7 @@ bool MotorControl::is_ready() {
     }
 
     // Find the error percentage and compare it to our acceptable threshold
-    if (error_percent() > MOTOR_READY_ERROR) {
+    if (_pid->error_percent() > MOTOR_READY_ERROR) {
         return false;
     } else {
         _is_motor_ready = true;
@@ -74,52 +72,18 @@ bool MotorControl::is_ready() {
     }
 }
 
-float MotorControl::error_percent() {
-    int error;
-
-    // Get the absolute error
-    error = _pid_error();
-    if (error < 0) {
-        error *= -1;
-    }
-
-    return (float) error / (float) _target_rpm;
-}
-
-int MotorControl::_pid_error() {
-    return _target_rpm - _encoder->get_current_rpm();
-}
-
 // PID adjust motor speed toward target RPM
 void MotorControl::update() {
-    if (micros() < _next_pid_check_micros)
+    unsigned long ts = micros();
+    if (ts < _next_pid_check_micros)
         return;
 
-    unsigned long ts = micros();
-
-    // Get the error between the current and desired RPM
-    int pid_error = _pid_error();
-    float delta_t = (ts - _last_pid_check_micros)/(1.0 * MICROS_PER_SECOND);
-
-    _cummulative_error += (pid_error * delta_t);
-
-    _pid_error_delta = (_last_pid_error - pid_error)/delta_t;
-
-    long p_delta = (PROPORTIONAL_K * pid_error) + (DERIVATIVE_K * _pid_error_delta);
-
+    long p_delta = (long) _pid->calc_response();
     _add_to_pwm_duty_cycle(p_delta);
+
     update_motor_speed();
 
-    _last_pid_check_micros = ts;
     _next_pid_check_micros = ts + PID_DELTA_MICROS;
-}
-
-float MotorControl::get_integral_error() {
-    return _cummulative_error;
-}
-
-float MotorControl::get_derivative_error() {
-    return _pid_error_delta;
 }
 
 void MotorControl::update_motor_speed() const {
@@ -159,9 +123,9 @@ unsigned long MotorControl::get_pwm_duty_cycle() const {
 }
 
 void MotorControl::set_target_rpm(int rpm) {
-    _target_rpm = rpm;
+    _pid->set_target_rpm(rpm);
 }
 
 int MotorControl::get_target_rpm() const {
-    return _target_rpm;
+    return _pid->get_target_rpm();
 }

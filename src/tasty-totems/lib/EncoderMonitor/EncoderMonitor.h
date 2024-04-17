@@ -14,8 +14,8 @@
 #define TIMING_CONSTANT (MICROS_IN_MINUTE / (ENCODER_MULT * GEARING))
 
 enum class MotorDirection {
-    FORWARD,
-    BACKWARD
+    CLOCKWISE,
+    COUNTER_CLOCKWISE
 };
 
 class EncoderMonitor {

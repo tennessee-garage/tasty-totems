@@ -35,7 +35,7 @@ void EncoderMonitor::handle_encoder_c1() {
     if (digitalRead(_encoder_pin_2) == HIGH) {
         // Pin 2 is alreaedy high while we (c1) are rising, c1 is lagging.  Calculate the delta and store
         _encoder_delta = micros() - _c2_rise_time;
-        _direction = MotorDirection::FORWARD;
+        _direction = MotorDirection::CLOCKWISE;
     } else {
         // We're ahead.  Store the start time
         _c1_rise_time = micros();
@@ -47,7 +47,7 @@ void EncoderMonitor::handle_encoder_c2() {
     if (digitalRead(_encoder_pin_1) == HIGH) {
         // Pin 1 is alreaedy high while we (c2) are rising, c1 is lagging.  Calculate the delta and store
         _encoder_delta = micros() - _c1_rise_time;
-        _direction = MotorDirection::BACKWARD;
+        _direction = MotorDirection::COUNTER_CLOCKWISE;
     } else {
         // We're ahead.  Store the start time
         _c2_rise_time = micros();

@@ -2,6 +2,7 @@
 #include "MotorControl.h"
 #include "LedStrip.h"
 #include "EncoderMonitor.h"
+#include "PIDControl.h"
 #include "RotationMonitor.h"
 
 // How long to pause before starting the strobe effect
@@ -17,6 +18,7 @@
 unsigned long trim_micros = 20000;
 
 EncoderMonitor *ENCODER;
+PIDControl *PID;
 MotorControl *MOTOR;
 LedStrip *STRIP;
 RotationMonitor *ROTATION;
@@ -25,31 +27,40 @@ void setup() {
     Serial.begin(115200);
     Serial.println("Setup begin");
 
+    Serial.print("Initalizing strip ... ");
     STRIP = new LedStrip(LED_STRIP_PIN, NUM_STRIP_PIXELS);
     STRIP->set_color(200, 0, 0);
     STRIP->set_frames_per_rotation(FRAMES_PER_ROTATION);
     STRIP->set_rotations_per_drum(ROTATIONS_PER_DRUM);
     STRIP->set_strobe_micros(STROBE_MICROS);
     STRIP->setup();
-
-    Serial.println("-- Strip setup");
+    Serial.println("done");
     
+    Serial.print("Initalizing rotation monitor ... ");
     ROTATION = new RotationMonitor(IR_DETECT_PIN);
     ROTATION->begin();
+    Serial.println("done");
 
-    Serial.println("-- IR setup");
 
+    Serial.print("Initalizing encoder ... ");
     ENCODER = new EncoderMonitor(ENCODER_C1_PIN, ENCODER_C2_PIN);
     ENCODER->begin();
+    Serial.println("done");
 
-    MOTOR = new MotorControl(MOTOR_PIN_1, MOTOR_PIN_2, ENCODER);
+    Serial.print("Initalizing PID controller ... ");
+    PID = new PIDControl(ENCODER);
+    PID->set_constants(PROPORTIONAL_K, INTEGRAL_K, DERIVATIVE_K);
+    Serial.println("done");
+
+    Serial.print("Initalizing motor control ... ");
+    MOTOR = new MotorControl(MOTOR_PIN_1, MOTOR_PIN_2, PID);
     MOTOR->set_pwm_channel(PWM_CHANNEL);
     MOTOR->setup();
+    Serial.println("done");
 
-    MOTOR->start_motor(TARGET_RPM, 0.8);
-
-    Serial.println("-- Motor started");
-    Serial.print("-- Letting motor come up to speed ");
+    Serial.print("Starting motor ... ");
+    MOTOR->start_motor(TARGET_RPM);
+    Serial.println("done");
 }
 
 unsigned long pause_until = millis() + START_PAUSE_MILLIS;
@@ -76,18 +87,7 @@ void handle_strip() {
     STRIP->update();
 }
 
-unsigned long next = 0;
-unsigned long wait_period = 500;
 void loop() {
-    /*
-    if (next < millis()) {
-        Serial.print(": error_percent=");
-        Serial.print(motor.error_percent());
-        Serial.println();
-        next = millis() + wait_period;
-    }
-    */
-
     if (Serial.available() > 0) {
         // read the incoming byte:
         trim_micros = Serial.parseInt();
