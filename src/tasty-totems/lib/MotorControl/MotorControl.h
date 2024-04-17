@@ -7,18 +7,25 @@
 #include <Arduino.h>
 #include "EncoderMonitor.h"
 
-// Settings to manage PWM on the motor
-#define DEFAULT_PWM_FREQ 80000
+#define MILLIS_PER_SECOND 1000
+#define MICROS_PER_SECOND (MILLIS_PER_SECOND * 1000)
+
+// Settings to manage PWM on the motor.  The relationship between the frequency & resolution is:
+//   freq = APB_CLK / (PWM_MAX * Prescalar) == APB_CLK / (2**resolution * Prescalar)
+// For a APB_CLK of 80 Mhz for the esp32 and a default prescalar of 1, it becomes:
+//   freq = 80_000_000 / 2**resolution
+#define DEFAULT_PWM_FREQ 100
+#define DEFAULT_PWM_RESOLUTION 12
 #define DEFAULT_PWM_CHANNEL 0
-#define DEFAULT_PWM_RESOLUTION 13
 
 // PID constants
-#define PROPORTIONAL_K 0.5
+#define PROPORTIONAL_K 0.2
+#define DERIVATIVE_K (0.3/10000)
 
 // How small the error has to be (0.0 to 1.0) before we declare we're up to speed and ready
 #define MOTOR_READY_ERROR 0.1
 
-#define PID_DELTA_MICROS 300
+#define PID_DELTA_MICROS 500
 
 class MotorControl {
 public:
@@ -29,9 +36,6 @@ public:
     void stop_motor();
     void update();
     void update_motor_speed() const;
-
-    void set_gearing(int gearing);
-    void set_encoder_multiplier(int mult);
 
     void set_pwm_channel(int channel);
     void set_pwm_freq(int freq);
@@ -46,8 +50,13 @@ public:
 
     float error_percent();
     bool is_ready();
-private:
+
+    float get_integral_error();
+    float get_derivative_error();
+
     int _pid_error();
+private:
+
     void _update_current_rpm();
     void _add_to_pwm_duty_cycle(long duty_cycle_delta);
     void _configure_pwm();
@@ -69,7 +78,16 @@ private:
 
     bool _is_motor_ready;
 
+    // We keep this one (vs adding PID_DELTA_MICROS to _last_pid_check_micros) to quickly check whether we
+    // should take another measurement w/o an addition.
     unsigned long _next_pid_check_micros;
+    // The timestamp of our last check
+    unsigned long _last_pid_check_micros;
+
+    int _last_pid_error;
+    float _pid_error_delta;
+
+    float _cummulative_error;
 };
 
 #endif

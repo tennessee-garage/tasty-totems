@@ -10,13 +10,20 @@ MotorControl::MotorControl(uint8_t motor_pin_1, uint8_t motor_pin_2, EncoderMoni
     _motor_pin_2 = motor_pin_2;
     _encoder = encoder;
 
+    // Establish our max value
     _pwm_duty_cycle = 0;
-    _max_duty_cycle = (_pwm_resolution << 2) - 1;
+    _max_duty_cycle = (2 << (_pwm_resolution-1)) - 1;
 
     _target_rpm = 0;
 
     _is_motor_ready = false;
+
     _next_pid_check_micros = micros() + PID_DELTA_MICROS;
+    _last_pid_check_micros = micros();
+    _cummulative_error = 0.0;
+
+    _last_pid_error = 0;
+    _pid_error_delta = 0.0;
 }
 
 void MotorControl::setup() {
@@ -31,9 +38,11 @@ void MotorControl::setup() {
 
     // attach the channel to the GPIO to be controlled
     ledcAttachPin(_motor_pin_1, _pwm_channel);
+}
 
-    // Establish our max value
-    _max_duty_cycle = (_pwm_resolution << 2) - 1;
+void MotorControl::_configure_pwm() {
+    // configure the PWM channel for our motor via the LEDC methods
+    ledcSetup(_pwm_channel, _pwm_freq, _pwm_resolution);
 }
 
 void MotorControl::start_motor(int target_rpm, float duty_cycle) {
@@ -77,11 +86,6 @@ float MotorControl::error_percent() {
     return (float) error / (float) _target_rpm;
 }
 
-void MotorControl::_configure_pwm() {
-    // configure the PWM channel for our motor via the LEDC methods
-    ledcSetup(_pwm_channel, _pwm_freq, _pwm_resolution);
-}
-
 int MotorControl::_pid_error() {
     return _target_rpm - _encoder->get_current_rpm();
 }
@@ -91,12 +95,31 @@ void MotorControl::update() {
     if (micros() < _next_pid_check_micros)
         return;
 
-    _next_pid_check_micros = micros() + PID_DELTA_MICROS;
+    unsigned long ts = micros();
 
     // Get the error between the current and desired RPM
-    long p_delta = PROPORTIONAL_K * _pid_error();
+    int pid_error = _pid_error();
+    float delta_t = (ts - _last_pid_check_micros)/(1.0 * MICROS_PER_SECOND);
+
+    _cummulative_error += (pid_error * delta_t);
+
+    _pid_error_delta = (_last_pid_error - pid_error)/delta_t;
+
+    long p_delta = (PROPORTIONAL_K * pid_error) + (DERIVATIVE_K * _pid_error_delta);
 
     _add_to_pwm_duty_cycle(p_delta);
+    update_motor_speed();
+
+    _last_pid_check_micros = ts;
+    _next_pid_check_micros = ts + PID_DELTA_MICROS;
+}
+
+float MotorControl::get_integral_error() {
+    return _cummulative_error;
+}
+
+float MotorControl::get_derivative_error() {
+    return _pid_error_delta;
 }
 
 void MotorControl::update_motor_speed() const {
@@ -115,7 +138,7 @@ void MotorControl::set_pwm_freq(int freq) {
 
 // Set the duty cycle as float between 0.0 and 1.0
 void MotorControl::set_pwm_duty_cycle(float duty_cycle) {
-    _pwm_duty_cycle = (unsigned long)(duty_cycle * float(2 << (_pwm_resolution-1)));
+    _pwm_duty_cycle = (unsigned long)(duty_cycle * float(_max_duty_cycle));
 }
 
 // Note that the unsigned long type forces a lower bound of zero
