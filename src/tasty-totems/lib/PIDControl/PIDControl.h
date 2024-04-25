@@ -8,11 +8,9 @@
 #define MICROS_PER_SECOND (MILLIS_PER_SECOND * 1000)
 
 // PID constants
-#define PROPORTIONAL_K 0.2
-#define INTEGRAL_K 0
-#define DERIVATIVE_K (0.3/10000)
-
-#define PID_DELTA_MICROS 500
+#define DEFAULT_PROPORTIONAL_K 1.075111
+#define DEFAULT_INTEGRAL_K 0.2
+#define DEFAULT_DERIVATIVE_K (0.1/10000)
 
 class PIDControl {
 public:
@@ -37,6 +35,7 @@ public:
     
     // Access calculated results of the response and each response term
     float get_response();
+    int get_rpm();
     float get_proportial_response();
     float get_integral_response();
     float get_derivative_response();
@@ -47,6 +46,7 @@ private:
     float _pk, _ik, _dk;
     int _target_rpm;
 
+    int _last_rpm;
     float _last_response;
     float _last_proportional_response, _last_integral_response, _last_derivative_response;
 

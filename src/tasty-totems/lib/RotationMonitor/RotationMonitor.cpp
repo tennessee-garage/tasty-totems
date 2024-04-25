@@ -2,8 +2,11 @@
 
 RotationMonitor* RotationMonitor::instance;
 
-RotationMonitor::RotationMonitor(uint8_t ir_pin) {
+RotationMonitor::RotationMonitor(uint8_t ir_pin, EncoderMonitor *encoder) {
     _ir_pin = ir_pin;
+    _encoder = encoder;
+    _last_rise_counter = 0;
+    reset_rotation_compete_flag();
 
     pinMode(_ir_pin, INPUT_PULLUP);
 }
@@ -30,6 +33,8 @@ void RotationMonitor::handle_ir() {
     if (digitalRead(_ir_pin) == HIGH)
       return;
 
+    _last_rise_counter = _encoder->get_rise_counter();
+    _encoder->clear_rise_counter();
     unsigned long tmp_micros = micros();
     _rotation_duration_micros = tmp_micros - _rotation_start_micros;
     _rotation_start_micros = tmp_micros;

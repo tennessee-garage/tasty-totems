@@ -21,8 +21,8 @@
 #define STATUS_UPDATE_DELAY_MS 500
 
 // PID constants
-#define PROPORTIONAL_K 0.2
-#define DERIVATIVE_K (0.3/10000)
+//#define PROPORTIONAL_K 0.2
+//#define DERIVATIVE_K (0.3/10000)
 
 EncoderMonitor *ENCODER;
 PIDControl *PID;
@@ -46,7 +46,7 @@ void setup() {
 
     Serial.print("Creating PID controller ...");
     PID = new PIDControl(ENCODER);
-    PID->set_constants(PROPORTIONAL_K, 0, DERIVATIVE_K);
+    PID->set_constants(DEFAULT_PROPORTIONAL_K, DEFAULT_INTEGRAL_K, DEFAULT_DERIVATIVE_K);
 
     Serial.print("Initializing motor ... ");
     MOTOR = new MotorControl(MOTOR_PIN_1, MOTOR_PIN_2, PID);
@@ -55,7 +55,7 @@ void setup() {
     Serial.println("done");
 
     Serial.print("Starting motor at ");
-    Serial.print(DEFAULT_DUTY_CYCLE * 100);
+    Serial.print(0.43); //DEFAULT_DUTY_CYCLE * 100);
     Serial.print("\% duty cycle ... ");
     MOTOR->start_motor(TARGET_RPM);
     Serial.println("done");
@@ -113,7 +113,7 @@ void loop() {
         Serial.println(PID->get_proportial_response());
  
         Serial.print(">rpm:");
-        Serial.println(ENCODER->get_current_rpm());
+        Serial.println(PID->get_rpm());
 
         Serial.print(">dError:");
         Serial.println(PID->get_derivative_response());

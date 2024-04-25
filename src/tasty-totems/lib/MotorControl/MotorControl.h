@@ -12,7 +12,7 @@
 //   freq = APB_CLK / (PWM_MAX * Prescalar) == APB_CLK / (2**resolution * Prescalar)
 // For a APB_CLK of 80 Mhz for the esp32 and a default prescalar of 1, it becomes:
 //   freq = 80_000_000 / 2**resolution
-#define DEFAULT_PWM_FREQ 100
+#define DEFAULT_PWM_FREQ 2000
 #define DEFAULT_PWM_RESOLUTION 12
 #define DEFAULT_PWM_CHANNEL 0
 

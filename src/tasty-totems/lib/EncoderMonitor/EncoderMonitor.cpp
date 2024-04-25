@@ -2,9 +2,11 @@
 
 EncoderMonitor* EncoderMonitor::instance;
 
-EncoderMonitor::EncoderMonitor(uint8_t encoder_pin_1, uint8_t encoder_pin_2) {
+EncoderMonitor::EncoderMonitor(uint8_t encoder_pin_1, uint8_t encoder_pin_2, uint16_t trim) {
     _encoder_pin_1 = encoder_pin_1;
     _encoder_pin_2 = encoder_pin_2;
+    _rise_counter = 0;
+    _trim = trim;
 
     pinMode(_encoder_pin_1, INPUT);
     pinMode(_encoder_pin_2, INPUT);
@@ -36,6 +38,7 @@ void EncoderMonitor::handle_encoder_c1() {
         // Pin 2 is alreaedy high while we (c1) are rising, c1 is lagging.  Calculate the delta and store
         _encoder_delta = micros() - _c2_rise_time;
         _direction = MotorDirection::CLOCKWISE;
+        _rise_counter++;
     } else {
         // We're ahead.  Store the start time
         _c1_rise_time = micros();
@@ -66,6 +69,27 @@ uint16_t EncoderMonitor::get_current_rpm() {
     if (_encoder_delta == 0) {
         return 0;
     } else {
+        //Serial.print(">encoderDelta:");
+        //Serial.println(_encoder_delta);
         return (uint16_t) (TIMING_CONSTANT / _encoder_delta);
     }
+}
+
+uint16_t EncoderMonitor::get_rise_counter() {
+    return _rise_counter;
+}
+
+void EncoderMonitor::clear_rise_counter() {
+    _rise_counter = 0;
+}
+
+float EncoderMonitor::rotation_progress() {
+    uint16_t adjusted_counter = _rise_counter-_trim;
+
+    // If our adjustment is less, than zero, wrap around the other direction
+    if (adjusted_counter < 0) {
+        adjusted_counter = ENCODER_STEPS - adjusted_counter;
+    }
+
+    return (1.0*(_rise_counter-_trim))/ENCODER_STEPS;
 }

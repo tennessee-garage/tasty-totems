@@ -2,12 +2,13 @@
 
 PIDControl::PIDControl(EncoderMonitor *encoder) {
     _encoder = encoder;
-    _pk = PROPORTIONAL_K;
-    _ik = INTEGRAL_K;
-    _dk = DERIVATIVE_K;
+    _pk = DEFAULT_PROPORTIONAL_K;
+    _ik = DEFAULT_INTEGRAL_K;
+    _dk = DEFAULT_DERIVATIVE_K;
 
     _target_rpm = 0;
     _last_pid_check_micros = 0;
+    _cummulative_error = 0;
 }
 
 void PIDControl::set_target_rpm(int target) {
@@ -45,7 +46,8 @@ float PIDControl::error_percent() {
 }
 
 int PIDControl::get_error() {
-    return _target_rpm - _encoder->get_current_rpm();
+    _last_rpm = _encoder->get_current_rpm();
+    return _target_rpm - _last_rpm;
 }
 
 float PIDControl::get_response() {
@@ -69,6 +71,10 @@ float PIDControl::calc_response() {
     _last_error = error;
 
     return _last_response;
+}
+
+int PIDControl::get_rpm() {
+    return _last_rpm;
 }
 
 float PIDControl::get_proportial_response() {

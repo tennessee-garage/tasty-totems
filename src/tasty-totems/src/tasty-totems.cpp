@@ -4,52 +4,50 @@
 #include "EncoderMonitor.h"
 #include "PIDControl.h"
 #include "RotationMonitor.h"
+#include "DrumMontior.h"
 
 // How long to pause before starting the strobe effect
 #define START_PAUSE_MILLIS 2000
 
-#define TRACK_START_IDX  2
-#define TRACK_END_IDX   32
+#define TRACK_START_IDX  1
+#define TRACK_END_IDX   31
 
-#define TARGET_RPM    100
-#define STROBE_MICROS 1000
-
-// Trim the time per frame in micros to get properly synced
-unsigned long trim_micros = 20000;
+// An offset to adjust the strobe start
+#define TRIM_STEPS 10
 
 EncoderMonitor *ENCODER;
 PIDControl *PID;
 MotorControl *MOTOR;
 LedStrip *STRIP;
 RotationMonitor *ROTATION;
+DrumMonitor *DRUM;
 
 void setup() {
     Serial.begin(115200);
     Serial.println("Setup begin");
 
-    Serial.print("Initalizing strip ... ");
-    STRIP = new LedStrip(LED_STRIP_PIN, NUM_STRIP_PIXELS);
-    STRIP->set_color(200, 0, 0);
-    STRIP->set_frames_per_rotation(FRAMES_PER_ROTATION);
-    STRIP->set_rotations_per_drum(ROTATIONS_PER_DRUM);
-    STRIP->set_strobe_micros(STROBE_MICROS);
-    STRIP->setup();
+    Serial.print("Initalizing encoder ... ");
+    ENCODER = new EncoderMonitor(ENCODER_C1_PIN, ENCODER_C2_PIN, TRIM_STEPS);
+    ENCODER->begin();
     Serial.println("done");
-    
+
     Serial.print("Initalizing rotation monitor ... ");
-    ROTATION = new RotationMonitor(IR_DETECT_PIN);
+    ROTATION = new RotationMonitor(IR_DETECT_PIN, ENCODER);
     ROTATION->begin();
     Serial.println("done");
 
-
-    Serial.print("Initalizing encoder ... ");
-    ENCODER = new EncoderMonitor(ENCODER_C1_PIN, ENCODER_C2_PIN);
-    ENCODER->begin();
-    Serial.println("done");
+    DRUM = new DrumMonitor(ENCODER);
 
     Serial.print("Initalizing PID controller ... ");
     PID = new PIDControl(ENCODER);
     PID->set_constants(PROPORTIONAL_K, INTEGRAL_K, DERIVATIVE_K);
+    Serial.println("done");
+
+    Serial.print("Initalizing strip ... ");
+    STRIP = new LedStrip(LED_STRIP_PIN, NUM_STRIP_PIXELS, DRUM);
+    STRIP->set_color(255, 255, 255);
+    STRIP->set_strobe_micros(STROBE_MICROS);
+    STRIP->setup();
     Serial.println("done");
 
     Serial.print("Initalizing motor control ... ");
@@ -64,35 +62,42 @@ void setup() {
 }
 
 unsigned long pause_until = millis() + START_PAUSE_MILLIS;
+
+// At the beginning we have two dependent conditions to handle.  First, we
+// need to wait for the motor to spin up, so we delay for a bit to wait for that.
+// Then, once its spinning, we need to wait for the current rotation to end, so that
+// we start a the first frame, of the top row of animation.
+bool in_delay_start = true;
+bool in_wait_for_next_rotation = true;
+
 bool strip_started = false;
 void handle_strip() {
-    // Skip strip updates if the motor isn't up to speed
-    if (!strip_started) {
-        if (millis() > pause_until) {
-            strip_started = true;
-            STRIP->start_light_tracking(TRACK_START_IDX, TRACK_END_IDX);
+    if (in_delay_start) {
+        // We are in the delay start while the current millis is less than the pause_until time
+        if (millis() < pause_until) {
+            return;
         }
-        
-        return;
+
+        in_delay_start = false;
+        ROTATION->reset_rotation_compete_flag();
     }
 
     // Send a sync to the strip on each rotation
     if (ROTATION->is_rotation_complete()) {
         ROTATION->reset_rotation_compete_flag();
-        Serial.print(":sync: rotation_duration_micros=");
-        Serial.println(ROTATION->last_rotation_micros());
-        STRIP->sync(ROTATION->last_rotation_micros(), trim_micros);
+        DRUM->increment_rotation();
+
+        if (in_wait_for_next_rotation) {
+            in_wait_for_next_rotation = false;
+            DRUM->reset();
+            STRIP->start_light_tracking(TRACK_START_IDX, TRACK_END_IDX);
+        }
     }
 
     STRIP->update();
 }
 
 void loop() {
-    if (Serial.available() > 0) {
-        // read the incoming byte:
-        trim_micros = Serial.parseInt();
-    }
-
     MOTOR->update();
     handle_strip();
 }
