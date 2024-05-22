@@ -6,3 +6,6 @@ trash
 
 # Don't include this licensed material
 art/stock animation/
+
+# Don't include kicad lock files
+*.lck
