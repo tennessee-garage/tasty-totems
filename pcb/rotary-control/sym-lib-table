@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 0)
+  (lib (name "rotary-control-eagle-import")(type "KiCad")(uri "${KIPRJMOD}/rotary-control-eagle-import.kicad_sym")(options "")(descr ""))
+)
