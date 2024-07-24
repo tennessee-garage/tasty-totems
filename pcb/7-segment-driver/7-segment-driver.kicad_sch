@@ -3999,6 +3999,7 @@
 	)
 	(label "1.G"
 		(at 240.03 134.62 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4009,6 +4010,7 @@
 	)
 	(label "1.D"
 		(at 240.03 119.38 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4019,6 +4021,7 @@
 	)
 	(label "DI"
 		(at 60.96 166.37 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4029,6 +4032,7 @@
 	)
 	(label "1.F"
 		(at 156.21 127 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4039,6 +4043,7 @@
 	)
 	(label "10.C"
 		(at 156.21 64.77 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4049,6 +4054,7 @@
 	)
 	(label "1.H"
 		(at 240.03 139.7 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4059,6 +4065,7 @@
 	)
 	(label "10.G"
 		(at 156.21 74.93 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4069,6 +4076,7 @@
 	)
 	(label "1.G"
 		(at 156.21 129.54 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4090,6 +4098,7 @@
 	)
 	(label "rclk"
 		(at 135.89 127 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4100,6 +4109,7 @@
 	)
 	(label "1.A"
 		(at 240.03 104.14 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4121,6 +4131,7 @@
 	)
 	(label "1.A"
 		(at 156.21 114.3 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4131,6 +4142,7 @@
 	)
 	(label "rclk"
 		(at 68.58 67.31 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4141,6 +4153,7 @@
 	)
 	(label "CLK"
 		(at 68.58 69.85 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4151,6 +4164,7 @@
 	)
 	(label "srclr"
 		(at 135.89 67.31 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4161,6 +4175,7 @@
 	)
 	(label "1.B"
 		(at 240.03 109.22 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4171,6 +4186,7 @@
 	)
 	(label "rclk"
 		(at 135.89 72.39 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4181,6 +4197,7 @@
 	)
 	(label "10.F"
 		(at 156.21 72.39 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4191,6 +4208,7 @@
 	)
 	(label "10.C"
 		(at 240.03 59.69 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4201,6 +4219,7 @@
 	)
 	(label "DI"
 		(at 63.5 127 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4211,6 +4230,7 @@
 	)
 	(label "10.D"
 		(at 240.03 64.77 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4221,6 +4241,7 @@
 	)
 	(label "1.C"
 		(at 240.03 114.3 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4242,6 +4263,7 @@
 	)
 	(label "10.B"
 		(at 156.21 62.23 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4252,6 +4274,7 @@
 	)
 	(label "ser"
 		(at 135.89 59.69 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4262,6 +4285,7 @@
 	)
 	(label "ser"
 		(at 68.58 59.69 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4272,6 +4296,7 @@
 	)
 	(label "1.D"
 		(at 156.21 121.92 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4282,6 +4307,7 @@
 	)
 	(label "srclk"
 		(at 135.89 64.77 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4292,6 +4318,7 @@
 	)
 	(label "10.A"
 		(at 240.03 49.53 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4313,6 +4340,7 @@
 	)
 	(label "1.C"
 		(at 156.21 119.38 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4323,6 +4351,7 @@
 	)
 	(label "10.A"
 		(at 156.21 59.69 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4333,6 +4362,7 @@
 	)
 	(label "srclr"
 		(at 135.89 121.92 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4343,6 +4373,7 @@
 	)
 	(label "1.F"
 		(at 240.03 129.54 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4353,6 +4384,7 @@
 	)
 	(label "10.H"
 		(at 156.21 77.47 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4363,6 +4395,7 @@
 	)
 	(label "10.B"
 		(at 240.03 54.61 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4373,6 +4406,7 @@
 	)
 	(label "DO"
 		(at 63.5 124.46 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4383,6 +4417,7 @@
 	)
 	(label "oe"
 		(at 68.58 82.55 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4393,6 +4428,7 @@
 	)
 	(label "1.H"
 		(at 156.21 132.08 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4425,6 +4461,7 @@
 	)
 	(label "oe"
 		(at 135.89 129.54 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4435,6 +4472,7 @@
 	)
 	(label "oe"
 		(at 135.89 74.93 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4445,6 +4483,7 @@
 	)
 	(label "10.E"
 		(at 240.03 69.85 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4455,6 +4494,7 @@
 	)
 	(label "10.H"
 		(at 240.03 85.09 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4465,6 +4505,7 @@
 	)
 	(label "DO"
 		(at 68.58 72.39 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4486,6 +4527,7 @@
 	)
 	(label "10.G"
 		(at 240.03 80.01 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4496,6 +4538,7 @@
 	)
 	(label "DO"
 		(at 60.96 168.91 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4506,6 +4549,7 @@
 	)
 	(label "10.E"
 		(at 156.21 69.85 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4516,6 +4560,7 @@
 	)
 	(label "srclk"
 		(at 135.89 119.38 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4548,6 +4593,7 @@
 	)
 	(label "EN"
 		(at 60.96 173.99 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4558,6 +4604,7 @@
 	)
 	(label "1.E"
 		(at 240.03 124.46 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4568,6 +4615,7 @@
 	)
 	(label "CLK"
 		(at 63.5 129.54 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4578,6 +4626,7 @@
 	)
 	(label "EN"
 		(at 68.58 77.47 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4588,6 +4637,7 @@
 	)
 	(label "1.B"
 		(at 156.21 116.84 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4609,6 +4659,7 @@
 	)
 	(label "srclr"
 		(at 68.58 64.77 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4619,6 +4670,7 @@
 	)
 	(label "1.E"
 		(at 156.21 124.46 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4629,6 +4681,7 @@
 	)
 	(label "CLK"
 		(at 60.96 171.45 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4639,6 +4692,7 @@
 	)
 	(label "DI"
 		(at 68.58 74.93 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4649,6 +4703,7 @@
 	)
 	(label "10.D"
 		(at 156.21 67.31 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4659,6 +4714,7 @@
 	)
 	(label "srclk"
 		(at 68.58 62.23 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4669,6 +4725,7 @@
 	)
 	(label "10.F"
 		(at 240.03 74.93 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5088,7 +5145,7 @@
 				)
 			)
 		)
-		(property "Value" "R"
+		(property "Value" "120"
 			(at 236.22 50.8 90)
 			(effects
 				(font
@@ -5155,7 +5212,7 @@
 				)
 			)
 		)
-		(property "Value" "R"
+		(property "Value" "120"
 			(at 236.22 61.214 90)
 			(effects
 				(font
@@ -5711,7 +5768,7 @@
 				)
 			)
 		)
-		(property "Value" "R"
+		(property "Value" "120"
 			(at 236.474 56.134 90)
 			(effects
 				(font

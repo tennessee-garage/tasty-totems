@@ -37,9 +37,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.762,
-          "height": 1.524,
-          "width": 1.524
+          "drill": 2.7,
+          "height": 4.5,
+          "width": 4.5
         },
         "silk_line_width": 0.1,
         "silk_text_italic": false,
@@ -74,6 +74,7 @@
         "footprint_type_mismatch": "ignore",
         "hole_clearance": "error",
         "hole_near_hole": "error",
+        "holes_co_located": "warning",
         "invalid_outline": "error",
         "isolated_copper": "warning",
         "item_on_disabled_layer": "error",
@@ -477,6 +478,7 @@
   },
   "schematic": {
     "annotate_start_num": 0,
+    "bom_export_filename": "",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
       "field_delimiter": ",",
@@ -576,7 +578,7 @@
   "sheets": [
     [
       "d75a6dbf-c2cb-4cd3-a179-4fd4d7db1737",
-      "rotary-control_0"
+      "Root"
     ]
   ],
   "text_variables": {}

@@ -1,0 +1,7 @@
+# Ignore temp files
+/#*
+/_*
+fp-info-cache
+tasty-totem-board-backups
+freerouting.dsn
+temp-freerouting.dsn

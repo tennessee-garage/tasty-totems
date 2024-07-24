@@ -1,2 +1,5 @@
 # ignore any .zip file backups
 *-backups/
+
+# Ignore cache files
+fp-info-cache
